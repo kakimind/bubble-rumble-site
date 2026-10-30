@@ -149,6 +149,16 @@
   .roster .rskill { font-size: 0.88rem; color: var(--ink-soft); display: block; margin-top: 0.5rem; line-height: 1.5; }
   @media (max-width: 900px) { .roster { grid-template-columns: repeat(2, 1fr); } }
 
+  .gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.6rem; }
+  .gallery figure { margin: 0; border: 1px solid var(--rule); background: var(--paper-raised); padding: 1rem; }
+  .gallery img { width: 100%; height: auto; display: block; border-radius: 3px; }
+  .gallery .cap {
+    margin-top: 0.9rem; font-family: "Space Mono"; font-size: 0.68rem; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--ink-soft); display: flex; justify-content: space-between; gap: 1rem;
+  }
+  .gallery .cap span:first-child { color: var(--spot); }
+  @media (max-width: 760px) { .gallery { grid-template-columns: 1fr; gap: 1rem; } }
+
   .readlink {
     display: inline-block; margin-top: 1.6rem; font-family: "Space Mono";
     font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase;
@@ -221,39 +231,69 @@
   </section>
 
   <section class="pull-section">
+    <div class="label">From the Arena — 실제 플레이 화면</div>
+    <div class="gallery">
+      <figure>
+        <img src="assets/shots/lobby.webp" width="1280" height="576" loading="lazy" alt="로비 화면. 왼쪽에 선택된 버디 클로이의 전신 아트와 '캣워크 섀도우' 스킬 설명, 아래에 레오·카이·바론·민호·루나 썸네일이 늘어서 있다. 오른쪽에는 배틀로얄 4인과 클래식 2vs2 타일, 해적선 빌리지 맵 칸, '방 만들기'와 '빠른 매치 시작' 버튼이 있다.">
+        <figcaption class="cap"><span>FIG. 02</span><span>로비 — 버디와 모드</span></figcaption>
+      </figure>
+      <figure>
+        <img src="assets/shots/createroom.webp" width="1280" height="576" loading="lazy" alt="방 만들기 시트. 방 제목 입력란 아래에 배틀로얄 4인(개인 서바이벌)과 클래식 2vs2(협동 팀 파티 전) 중 배틀로얄이 선택돼 있고, 전장 맵으로 토이 빌리지·해적선 빌리지·사막 유적 빌리지·아이스 빌리지가 모두 9×9로 나열돼 있다.">
+        <figcaption class="cap"><span>FIG. 03</span><span>방 만들기 — 모드와 맵</span></figcaption>
+      </figure>
+      <figure>
+        <img src="assets/shots/arena.webp" width="1280" height="576" loading="lazy" alt="해적선 빌리지 9×9 아레나. 가운데 보드에 네 명의 말과 물풍선·보물상자·닻 기믹이 놓여 있고, 좌우에 FizzBoom·Geyser·WaveRider·Nova11 네 플레이어의 체력 바가, 오른쪽 위에 'SURVIVAL FFA 4/4'와 남은 시간 01:30이 표시된다.">
+        <figcaption class="cap"><span>FIG. 04</span><span>아레나 — 배틀로얄 4인</span></figcaption>
+      </figure>
+      <figure>
+        <img src="assets/shots/play.webp" width="1280" height="576" loading="lazy" alt="플레이 중 화면. 1P 카드가 붉게 변하며 'SOS 1.5s' 갇힘 상태를 알리고, 다른 플레이어 카드에는 SHIELD 5.0s와 SPEED 4.0s 버프가 걸려 있다. 보드 위에는 집어 들 수 있는 화력 강화 아이템이 떠 있고 왼쪽 아래에 방향 패드, 오른쪽 아래에 SKILL과 BUBBLE 버튼이 있다.">
+        <figcaption class="cap"><span>FIG. 05</span><span>플레이 — 갇힘과 버프</span></figcaption>
+      </figure>
+      <figure>
+        <img src="assets/shots/shop.webp" width="1280" height="576" loading="lazy" alt="버블 상점의 스킨 컬렉션 탭. 보유 다이아 1246이 상단에 있고, 레오의 산타 홀리데이(고급·200), 사이버 닌자(영웅·400), 다이노 잠옷(고급·200), 달콤 파티쉐(희귀·300)가 미리보기 이미지와 함께 나열돼 있다.">
+        <figcaption class="cap"><span>FIG. 06</span><span>상점 — 다이아로 사는 스킨</span></figcaption>
+      </figure>
+      <figure>
+        <img src="assets/shots/wardrobe.webp" width="1280" height="576" loading="lazy" alt="'클로이 전용 스킨 옷장' 시트. 기본 클로이가 '착용중'으로 표시돼 있고, 서머 세일러 바캉스(희귀·300), 아기고양이 파자마(고급), 사이버 네온 팝 아이돌(영웅)이 잠금 가격과 함께 놓여 있다. 아래에 '터치 시 즉시 로비 캐릭터에 적용됩니다'라는 안내와 '장착 완료' 버튼이 있다.">
+        <figcaption class="cap"><span>FIG. 07</span><span>스킨 옷장 — 버디마다 아홉 벌</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="pull-section">
     <div class="label">The Lineup — 버디즈 라인업</div>
     <div class="roster">
       <figure>
         <img src="assets/buddies/leo.webp" width="420" height="420" loading="lazy" alt="야구모자와 바시티 재킷을 입은 사자 캐릭터 레오">
-        <figcaption><span class="rname">레오</span><span class="rrole">FIG. 02 · 속도 &amp; 기동형</span><span class="rskill">물줄기 스트라이커. 고속 물줄기로 돌진합니다.</span></figcaption>
+        <figcaption><span class="rname">레오</span><span class="rrole">FIG. 08 · 속도 &amp; 기동형</span><span class="rskill">물줄기 스트라이커. 고속 물줄기로 돌진합니다.</span></figcaption>
       </figure>
       <figure>
         <img src="assets/buddies/kai.webp" width="420" height="420" loading="lazy" alt="펭귄 캐릭터 카이">
-        <figcaption><span class="rname">카이</span><span class="rrole">FIG. 03 · 방어 &amp; 설치형</span><span class="rskill">빙하 프로텍터. 빙하 방벽을 세워 길을 막습니다.</span></figcaption>
+        <figcaption><span class="rname">카이</span><span class="rrole">FIG. 09 · 방어 &amp; 설치형</span><span class="rskill">빙하 프로텍터. 빙하 방벽을 세워 길을 막습니다.</span></figcaption>
       </figure>
       <figure>
         <img src="assets/buddies/baron.webp" width="420" height="420" loading="lazy" alt="곰 캐릭터 바론">
-        <figcaption><span class="rname">바론</span><span class="rrole">FIG. 04 · 탱커 &amp; 방어형</span><span class="rskill">철벽 가디언. 다음 피격을 막는 보호막을 두릅니다.</span></figcaption>
+        <figcaption><span class="rname">바론</span><span class="rrole">FIG. 10 · 탱커 &amp; 방어형</span><span class="rskill">철벽 가디언. 다음 피격을 막는 보호막을 두릅니다.</span></figcaption>
       </figure>
       <figure>
         <img src="assets/buddies/mino.webp" width="420" height="420" loading="lazy" alt="생쥐 캐릭터 민호">
-        <figcaption><span class="rname">민호</span><span class="rrole">FIG. 05 · 은신 &amp; 트랩형</span><span class="rskill">스피드 트릭스터. 속박 치즈 지뢰를 깔아 둡니다.</span></figcaption>
+        <figcaption><span class="rname">민호</span><span class="rrole">FIG. 11 · 은신 &amp; 트랩형</span><span class="rskill">스피드 트릭스터. 속박 치즈 지뢰를 깔아 둡니다.</span></figcaption>
       </figure>
       <figure>
         <img src="assets/buddies/luna.webp" width="420" height="420" loading="lazy" alt="연보라 후드를 입은 토끼 캐릭터 루나">
-        <figcaption><span class="rname">루나</span><span class="rrole">FIG. 06 · 밸런스 &amp; 서포트형</span><span class="rskill">별빛 드림 캐스터. 별빛 버블을 놓고 곧바로 질주합니다.</span></figcaption>
+        <figcaption><span class="rname">루나</span><span class="rrole">FIG. 12 · 밸런스 &amp; 서포트형</span><span class="rskill">별빛 드림 캐스터. 별빛 버블을 놓고 곧바로 질주합니다.</span></figcaption>
       </figure>
       <figure>
         <img src="assets/buddies/scarlet.webp" width="420" height="420" loading="lazy" alt="팬더 캐릭터 스칼렛">
-        <figcaption><span class="rname">스칼렛</span><span class="rrole">FIG. 07 · 격투 &amp; 돌격형</span><span class="rskill">무도 마스터. 전방을 광역 버블로 돌파합니다.</span></figcaption>
+        <figcaption><span class="rname">스칼렛</span><span class="rrole">FIG. 13 · 격투 &amp; 돌격형</span><span class="rskill">무도 마스터. 전방을 광역 버블로 돌파합니다.</span></figcaption>
       </figure>
       <figure>
         <img src="assets/buddies/chloe.webp" width="420" height="420" loading="lazy" alt="고양이 캐릭터 클로이">
-        <figcaption><span class="rname">클로이</span><span class="rrole">FIG. 08 · 민첩 &amp; 유틸형</span><span class="rskill">바람의 닌자. 잠시 투명해지며 뛰어넘습니다.</span></figcaption>
+        <figcaption><span class="rname">클로이</span><span class="rrole">FIG. 14 · 민첩 &amp; 유틸형</span><span class="rskill">바람의 닌자. 잠시 투명해지며 뛰어넘습니다.</span></figcaption>
       </figure>
       <figure>
         <img src="assets/buddies/mia.webp" width="420" height="420" loading="lazy" alt="여우 캐릭터 미아">
-        <figcaption><span class="rname">미아</span><span class="rrole">FIG. 09 · 속도 &amp; 교란형</span><span class="rskill">붉은여우 트릭스터. 분신 버블로 상대를 흔듭니다.</span></figcaption>
+        <figcaption><span class="rname">미아</span><span class="rrole">FIG. 15 · 속도 &amp; 교란형</span><span class="rskill">붉은여우 트릭스터. 분신 버블로 상대를 흔듭니다.</span></figcaption>
       </figure>
     </div>
   </section>
