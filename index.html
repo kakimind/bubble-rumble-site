@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bubble Rumble — 물풍선 격자 파티 아케이드</title>
+<meta name="description" content="물풍선을 놓고 물줄기로 겨루는 4인 격자 아케이드. 고유 스킬을 가진 버디 8종, 스킨 72종, 맵 4종, 전 세계 플레이어와의 직접 연결 대전. Android 비공개 테스트 중.">
+<meta property="og:title" content="Bubble Rumble — 물풍선 격자 파티 아케이드">
+<meta property="og:description" content="놓고, 피하고, 마지막까지 남으세요. 버디 8종과 배틀 아이템 5종, 맵 4종의 4인 파티 아케이드. Android 비공개 테스트 중.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://kakimind.github.io/bubble-rumble-site/assets/hero.webp">
+<meta property="og:url" content="https://kakimind.github.io/bubble-rumble-site/">
+<link rel="icon" href="icon.png">
+<link rel="canonical" href="https://kakimind.github.io/bubble-rumble-site/">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;900&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Space+Mono:wght@400;700&display=swap');
+
+  :root {
+    --paper: #fafaf6; --paper-raised: #ffffff; --ink: #101012;
+    --ink-soft: #55534c; --ink-faint: #94918a; --rule: #d8d5cb;
+    --spot: #2f7cf6; --focus: #101012;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #121210; --paper-raised: #1a1a17; --ink: #f2f0e8;
+      --ink-soft: #b5b1a5; --ink-faint: #706d63; --rule: #38362f; --focus: #f2f0e8;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #121210; --paper-raised: #1a1a17; --ink: #f2f0e8;
+    --ink-soft: #b5b1a5; --ink-faint: #706d63; --rule: #38362f; --focus: #f2f0e8;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: "Source Serif 4", Georgia, serif;
+    font-size: 17px; line-height: 1.65; -webkit-font-smoothing: antialiased;
+  }
+  .masthead-font { font-family: "Big Shoulders Display", "Archivo Black", sans-serif; }
+  a { color: inherit; text-decoration: none; }
+  img { max-width: 100%; }
+
+  .skip {
+    position: absolute; left: -9999px; top: 0; z-index: 50;
+    background: var(--ink); color: var(--paper); padding: 0.7rem 1.1rem;
+    font-family: "Space Mono"; font-size: 0.78rem;
+  }
+  .skip:focus { left: 0.8rem; top: 0.8rem; }
+
+  .page { max-width: 76rem; margin: 0 auto; padding: 0 1.8rem; }
+
+  .runhead {
+    position: fixed; top: 0; bottom: 0; left: 0.9rem; z-index: 20;
+    display: flex; align-items: center; pointer-events: none;
+  }
+  .runhead span {
+    display: inline-block; writing-mode: vertical-rl;
+    font-family: "Space Mono"; font-size: 0.72rem; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--ink-faint);
+  }
+  @media (max-width: 980px) { .runhead { display: none; } }
+
+  .backbar {
+    position: fixed; top: 1.2rem; right: 1.6rem; z-index: 20;
+    font-family: "Space Mono"; font-size: 0.75rem; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--ink-soft);
+    border-bottom: 1px solid var(--ink-faint); padding-bottom: 0.2rem;
+  }
+  .backbar:hover { color: var(--ink); border-color: var(--ink); }
+
+  .opener {
+    padding: 6rem 0 3rem; border-bottom: 3px solid var(--ink);
+    display: grid; grid-template-columns: 1.3fr 1fr; gap: 3rem; align-items: end;
+  }
+  .opener .kicker {
+    font-family: "Space Mono"; font-size: 0.78rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--spot); display: block; margin-bottom: 1.2rem;
+  }
+  .opener h1 {
+    font-family: "Big Shoulders Display"; font-weight: 900;
+    font-size: clamp(2.4rem, 6.4vw, 4.6rem); line-height: 0.95; margin: 0; text-transform: uppercase;
+  }
+  .opener .dek { font-style: italic; font-size: 1.2rem; color: var(--ink-soft); margin: 1.4rem 0 0; max-width: 32rem; }
+  .opener .byline { font-family: "Space Mono"; font-size: 0.78rem; color: var(--ink-faint); text-align: right; line-height: 1.9; }
+  @media (max-width: 760px) { .opener { grid-template-columns: 1fr; } .opener .byline { text-align: left; } }
+
+  .plate-row {
+    padding: 3rem 0; display: grid; grid-template-columns: 1fr 1.3fr;
+    gap: 3rem; align-items: center; border-bottom: 1px solid var(--rule);
+  }
+  .plate { position: relative; border: 1px solid var(--rule); background: var(--paper-raised); padding: 1.6rem; margin: 0; }
+  .plate .shot { width: 100%; height: auto; border-radius: 4px; display: block; }
+  .plate .cap { margin-top: 1rem; font-family: "Space Mono"; font-size: 0.72rem; color: var(--ink-faint); display: flex; justify-content: space-between; gap: 1rem; }
+  .lede p.body:first-of-type::first-letter {
+    font-family: "Big Shoulders Display"; font-weight: 900; font-size: 3.4rem;
+    line-height: 0.8; float: left; padding: 0.05em 0.12em 0 0; color: var(--spot);
+  }
+  .lede p.body { margin: 0 0 1.1rem; max-width: 34rem; }
+
+  .factbox { border-top: 2px solid var(--ink); padding-top: 1rem; margin-top: 1.4rem; max-width: 30rem; }
+  .factbox dl { display: flex; flex-wrap: wrap; gap: 0 1.8rem; margin: 0; }
+  .factbox dt { font-family: "Space Mono"; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); margin: 0; }
+  .factbox dd { font-family: "Space Mono"; font-size: 0.85rem; margin: 0.1rem 0 0.8rem; color: var(--ink); }
+
+  .playbadge {
+    display: inline-flex; align-items: center; gap: 0.6em; margin-top: 1.6rem; padding: 0.8rem 1.3rem;
+    background: var(--ink); color: var(--paper); font-family: "Space Mono"; font-size: 0.82rem;
+    letter-spacing: 0.04em; text-transform: uppercase; transition: background-color 0.2s ease;
+  }
+  .playbadge:hover { background: var(--spot); color: #fff; }
+  .playbadge.pending { background: none; color: var(--ink-soft); border: 1px dashed var(--ink-faint); }
+  .badge-note { font-family: "Space Mono"; font-size: 0.72rem; color: var(--ink-faint); margin: 0.7rem 0 0; }
+
+  @media (max-width: 760px) { .plate-row { grid-template-columns: 1fr; } }
+
+  .pull-section { padding: 3.5rem 0; border-bottom: 1px solid var(--rule); }
+  .pull-section .label { font-family: "Space Mono"; font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 1.8rem; }
+  .feature-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+  .feature-list li { display: grid; grid-template-columns: 4.5rem 1fr; gap: 1.4rem; padding: 1.4rem 0; border-top: 1px solid var(--rule); }
+  .feature-list li:first-child { border-top: none; }
+  .feature-list .fnum { font-family: "Big Shoulders Display"; font-weight: 900; font-size: 1.8rem; color: var(--spot); opacity: 0.5; }
+  .feature-list h3 { font-family: "Big Shoulders Display"; font-weight: 700; text-transform: uppercase; font-size: 1.15rem; margin: 0 0 0.35rem; }
+  .feature-list p { margin: 0; color: var(--ink-soft); max-width: 36rem; }
+
+  .figures { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 2px solid var(--ink); margin: 0; }
+  .figures div { padding: 1.4rem 1.4rem 1.6rem; border-left: 1px solid var(--rule); }
+  .figures div:first-child { border-left: none; padding-left: 0; }
+  .figures dt { font-family: "Space Mono"; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); margin: 0 0 0.5rem; }
+  .figures dd { margin: 0; font-family: "Big Shoulders Display"; font-weight: 900; font-size: 2.6rem; line-height: 1; }
+  .figures dd span { font-family: "Space Mono"; font-weight: 400; font-size: 0.78rem; color: var(--ink-soft); display: block; margin-top: 0.5rem; letter-spacing: 0.02em; line-height: 1.5; }
+  @media (max-width: 760px) {
+    .figures { grid-template-columns: repeat(2, 1fr); }
+    .figures div:nth-child(odd) { border-left: none; padding-left: 0; }
+  }
+
+  .note-row { display: grid; grid-template-columns: 1fr 1.3fr; gap: 3rem; align-items: start; }
+  .note-row .standfirst { font-style: italic; font-size: 1.1rem; color: var(--ink-soft); margin: 0; max-width: 24rem; }
+  .note-row .body { margin: 0 0 1.1rem; max-width: 36rem; }
+  .note-row .body:last-of-type { margin-bottom: 0; color: var(--ink-soft); }
+  @media (max-width: 760px) { .note-row { grid-template-columns: 1fr; gap: 1.8rem; } }
+
+  .roster { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.4rem; }
+  .roster figure { margin: 0; border: 1px solid var(--rule); background: var(--paper-raised); padding: 0.9rem; }
+  .roster img { width: 100%; height: auto; display: block; border-radius: 3px; }
+  .roster figcaption { margin-top: 0.8rem; }
+  .roster .rname { font-family: "Big Shoulders Display"; font-weight: 900; text-transform: uppercase; font-size: 1.25rem; line-height: 1; display: block; }
+  .roster .rrole { font-family: "Space Mono"; font-size: 0.66rem; letter-spacing: 0.06em; color: var(--spot); display: block; margin-top: 0.35rem; }
+  .roster .rskill { font-size: 0.88rem; color: var(--ink-soft); display: block; margin-top: 0.5rem; line-height: 1.5; }
+  @media (max-width: 900px) { .roster { grid-template-columns: repeat(2, 1fr); } }
+
+  .readlink {
+    display: inline-block; margin-top: 1.6rem; font-family: "Space Mono";
+    font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--spot); border-bottom: 1px solid currentColor; padding-bottom: 0.2rem;
+  }
+  .readlink:hover { color: var(--ink); }
+
+  .colophon { padding: 4rem 0 6rem; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1.5rem; }
+  .colophon .masthead-font { font-weight: 900; font-size: 1.4rem; text-transform: uppercase; }
+  .colophon .meta { font-family: "Space Mono"; font-size: 0.78rem; color: var(--ink-soft); text-align: right; line-height: 1.8; }
+  .colophon .meta a:hover { color: var(--ink); text-decoration: underline; }
+  @media (max-width: 760px) { .colophon .meta { text-align: left; } }
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">본문으로 바로가기</a>
+<div class="runhead"><span>KAKIMIND — ISSUE № 01 — FEATURE: BUBBLE RUMBLE</span></div>
+<a class="backbar" href="https://kakimind.github.io/">← Back to Issue Index</a>
+
+<div class="page" id="main">
+  <section class="opener">
+    <div>
+      <span class="kicker">§08 — Party Arcade — Closed Testing</span>
+      <h1>Bubble<br>Rumble</h1>
+      <p class="dek">놓고, 피하고, 마지막까지 남으세요.</p>
+    </div>
+    <div class="byline">BY KAKIMIND<br>SOLO ANDROID STUDIO<br>FEATURED IN ISSUE № 01</div>
+  </section>
+
+  <section class="plate-row">
+    <figure class="plate">
+      <img class="shot" src="assets/hero.webp" width="720" height="720" alt="연보라 후드를 입은 토끼 캐릭터 루나가 분홍·보라·하늘색 타일 위에 서 있는 캐릭터 아트" fetchpriority="high">
+      <div class="cap"><span>FIG. 01</span><span>루나 — 캐릭터 아트</span></div>
+    </figure>
+    <div class="lede">
+      <p class="body">격자 위에 물풍선을 놓는다. 잠시 뒤 터지면서 사방으로 물줄기가 뻗고, 그 선 위에 있던 것은 블록이든 상대든 함께 쓸려 나간다. 자기가 놓은 풍선도 예외가 아니다.</p>
+      <p class="body">규칙은 그게 전부라 첫 판부터 바로 붙을 수 있다. 어려운 쪽은 좁아지는 길목에서 언제 놓고 언제 물러설지를 읽는 일이다. 네 자리가 차면 한 명이 남을 때까지, 혹은 한 편이 남을 때까지 이어진다.</p>
+      <div class="factbox">
+        <dl>
+          <div><dt>Platform</dt><dd>Android</dd></div>
+          <div><dt>Status</dt><dd>Closed Testing</dd></div>
+          <div><dt>Genre</dt><dd>Party Arcade</dd></div>
+        </dl>
+      </div>
+      <span class="playbadge pending">◷ Google Play 비공개 테스트 중</span>
+      <p class="badge-note">공개 출시가 확정되면 이곳에 다운로드 링크를 올립니다.</p>
+    </div>
+  </section>
+
+  <section class="pull-section">
+    <div class="label">What's Inside</div>
+    <ul class="feature-list">
+      <li><span class="fnum">01</span><div><h3>놓고, 터지고, 길이 열린다</h3><p>물풍선은 놓은 자리에서 잠시 뒤 터지며 상하좌우로 물줄기를 뻗습니다. 블록이 부서져 길이 열리고, 그 길에 서 있던 사람은 물방울에 갇힙니다.</p></div></li>
+      <li><span class="fnum">02</span><div><h3>버디마다 다른 한 수</h3><p>여덟 캐릭터가 저마다 다른 스킬을 가집니다. 바론은 다음 피격을 막는 보호막을, 카이는 빙하 방벽을, 클로이는 잠깐의 투명화를, 민호는 속박 지뢰를 씁니다.</p></div></li>
+      <li><span class="fnum">03</span><div><h3>배틀 아이템 다섯</h3><p>직선 위의 풍선과 장애물을 즉시 터뜨리는 저격 다트, 갇힘에서 바로 빠져나오는 바늘 키트, 화력을 최대로 올리는 포션, 5초간 +35% 가속하는 롤러스케이트, 폭발 한 번을 완전히 무효화하는 쉴드 젬.</p></div></li>
+      <li><span class="fnum">04</span><div><h3>성격이 다른 네 개의 맵</h3><p>기믹 박스가 놓인 토이 빌리지, 화약통과 해류가 있는 해적선 빌리지, 모래 늪과 돌풍이 부는 사막 유적 빌리지, 미끄러운 얼음과 반사 기믹의 아이스 빌리지.</p></div></li>
+      <li><span class="fnum">05</span><div><h3>두 가지 대전 방식</h3><p>자기장이 좁혀 오는 배틀로얄 4인, 그리고 둘이 한 편이 되는 클래식 2vs2. 배틀로얄은 마지막 한 명이, 2vs2는 마지막 한 편이 남을 때까지 이어집니다.</p></div></li>
+    </ul>
+  </section>
+
+  <section class="pull-section">
+    <div class="label">By the Numbers</div>
+    <dl class="figures">
+      <div><dt>버디</dt><dd>8<span>저마다 다른 스킬과 역할</span></dd></div>
+      <div><dt>스킨</dt><dd>72<span>버디마다 아홉 벌</span></dd></div>
+      <div><dt>전장 맵</dt><dd>4<span>지형과 기믹이 전부 다름</span></dd></div>
+      <div><dt>대전 모드</dt><dd>2<span>배틀로얄 4인 · 클래식 2vs2</span></dd></div>
+    </dl>
+  </section>
+
+  <section class="pull-section">
+    <div class="label">The Lineup — 버디즈 라인업</div>
+    <div class="roster">
+      <figure>
+        <img src="assets/buddies/leo.webp" width="420" height="420" loading="lazy" alt="야구모자와 바시티 재킷을 입은 사자 캐릭터 레오">
+        <figcaption><span class="rname">레오</span><span class="rrole">FIG. 02 · 속도 &amp; 기동형</span><span class="rskill">물줄기 스트라이커. 고속 물줄기로 돌진합니다.</span></figcaption>
+      </figure>
+      <figure>
+        <img src="assets/buddies/kai.webp" width="420" height="420" loading="lazy" alt="펭귄 캐릭터 카이">
+        <figcaption><span class="rname">카이</span><span class="rrole">FIG. 03 · 방어 &amp; 설치형</span><span class="rskill">빙하 프로텍터. 빙하 방벽을 세워 길을 막습니다.</span></figcaption>
+      </figure>
+      <figure>
+        <img src="assets/buddies/baron.webp" width="420" height="420" loading="lazy" alt="곰 캐릭터 바론">
+        <figcaption><span class="rname">바론</span><span class="rrole">FIG. 04 · 탱커 &amp; 방어형</span><span class="rskill">철벽 가디언. 다음 피격을 막는 보호막을 두릅니다.</span></figcaption>
+      </figure>
+      <figure>
+        <img src="assets/buddies/mino.webp" width="420" height="420" loading="lazy" alt="생쥐 캐릭터 민호">
+        <figcaption><span class="rname">민호</span><span class="rrole">FIG. 05 · 은신 &amp; 트랩형</span><span class="rskill">스피드 트릭스터. 속박 치즈 지뢰를 깔아 둡니다.</span></figcaption>
+      </figure>
+      <figure>
+        <img src="assets/buddies/luna.webp" width="420" height="420" loading="lazy" alt="연보라 후드를 입은 토끼 캐릭터 루나">
+        <figcaption><span class="rname">루나</span><span class="rrole">FIG. 06 · 밸런스 &amp; 서포트형</span><span class="rskill">별빛 드림 캐스터. 별빛 버블을 놓고 곧바로 질주합니다.</span></figcaption>
+      </figure>
+      <figure>
+        <img src="assets/buddies/scarlet.webp" width="420" height="420" loading="lazy" alt="팬더 캐릭터 스칼렛">
+        <figcaption><span class="rname">스칼렛</span><span class="rrole">FIG. 07 · 격투 &amp; 돌격형</span><span class="rskill">무도 마스터. 전방을 광역 버블로 돌파합니다.</span></figcaption>
+      </figure>
+      <figure>
+        <img src="assets/buddies/chloe.webp" width="420" height="420" loading="lazy" alt="고양이 캐릭터 클로이">
+        <figcaption><span class="rname">클로이</span><span class="rrole">FIG. 08 · 민첩 &amp; 유틸형</span><span class="rskill">바람의 닌자. 잠시 투명해지며 뛰어넘습니다.</span></figcaption>
+      </figure>
+      <figure>
+        <img src="assets/buddies/mia.webp" width="420" height="420" loading="lazy" alt="여우 캐릭터 미아">
+        <figcaption><span class="rname">미아</span><span class="rrole">FIG. 09 · 속도 &amp; 교란형</span><span class="rskill">붉은여우 트릭스터. 분신 버블로 상대를 흔듭니다.</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="pull-section">
+    <div class="label">How to Play</div>
+    <div class="note-row">
+      <p class="standfirst">배우는 데 한 판, 읽는 데는 오래 걸립니다.</p>
+      <ul class="feature-list">
+        <li><span class="fnum">01</span><div><h3>길을 내며 나아가세요</h3><p>블록을 부숴야 지나갈 자리가 생깁니다. 풍선을 놓은 뒤 터질 자리에서 반드시 비켜서세요. 내 물줄기도 나를 가둡니다.</p></div></li>
+        <li><span class="fnum">02</span><div><h3>길목을 잡으세요</h3><p>상대를 쫓기보다 빠져나갈 길을 먼저 막는 편이 빠릅니다. 막다른 곳으로 몰아넣는 한 수가 정면 승부보다 자주 통합니다.</p></div></li>
+        <li><span class="fnum">03</span><div><h3>스킬과 아이템은 마지막에</h3><p>보호막도 가속도 한 번뿐입니다. 자기장이 좁혀 와 피할 자리가 사라졌을 때 남겨 둔 한 장이 판을 가릅니다.</p></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="pull-section">
+    <div class="label">Online — 서버는 소개만 합니다</div>
+    <div class="note-row">
+      <p class="standfirst">매치 데이터는 서버를 지나지 않고 플레이어끼리 직접 오갑니다.</p>
+      <div>
+        <p class="body">온라인 방을 열면 같은 지역 로비에 방이 올라가고, 들어온 사람과 직접 연결을 맺습니다. 그 뒤로는 입력도 보드 상태도 둘 사이로만 오갑니다. 중계 서버를 거치지 않으니 한 박자가 짧습니다.</p>
+        <p class="body">계정도 로그인도 없습니다. 닉네임과 프로필 사진, 모아 둔 다이아와 스킨, 전적은 기기 안에만 저장됩니다. 네트워크 사정으로 직접 연결이 되지 않을 때만 중계 서버를 경유합니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="pull-section">
+    <div class="label">Energy &amp; Ads — 광고 정책</div>
+    <div class="note-row">
+      <p class="standfirst">직접 누르는 보상형 광고만 있습니다. 끼어드는 광고는 없습니다.</p>
+      <div>
+        <ul class="feature-list">
+          <li><span class="fnum">01</span><div><h3>한 판에 에너지 하나</h3><p>매치를 시작하면 에너지가 듭니다. 시간이 지나면 다시 차오릅니다.</p></div></li>
+          <li><span class="fnum">02</span><div><h3>보상은 직접 선택할 때만</h3><p>다이아와 에너지 충전은 로비의 "광고 보고 받기"를 직접 눌렀을 때만 재생됩니다. 플레이 중 화면을 덮는 전면광고는 사용하지 않습니다.</p></div></li>
+          <li><span class="fnum">03</span><div><h3>끝까지 봤을 때만 지급</h3><p>중간에 닫으면 아무것도 지급되지 않습니다. 광고는 Google AdMob으로 동작하며, 현재 비공개 테스트 빌드는 테스트 광고 모드입니다.</p></div></li>
+        </ul>
+        <a class="readlink" href="privacy.html">개인정보처리방침 →</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="colophon">
+    <span class="masthead-font">Kakimind</span>
+    <div class="meta">
+      <a href="privacy.html">개인정보처리방침</a> · <a href="https://kakimind.github.io/">다른 작품 보기</a><br>
+      Contact: <a href="mailto:kakimind@gmail.com">kakimind@gmail.com</a><br>
+      © 2026 kakimind — Bubble Rumble
+    </div>
+  </footer>
+</div>
+</body>
+</html>
